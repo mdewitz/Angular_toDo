@@ -5,7 +5,10 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
 // mongoose.connect('mongodb://coreos/photo');
-mongoose.connect('mongodb://localhost/angulartodo');
+// mongoose.connect('mongodb://localhost/angulartodo');
+
+
+
 
 app.use(express.static(__dirname + "./../public"));
 app.use(bodyParser.urlencoded({extended:true}));

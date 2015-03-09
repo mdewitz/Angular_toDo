@@ -1,30 +1,65 @@
 // var fs = require('fs');
 // var app = express();
 // var bodyParser = require('body-parser');
-// var mongoose =  require('mongoose');
+var mongoose =  require('mongoose');
 var express = require('express');
 var router = express.Router();
 
 // mongoose.connect('mongodb://coreos/photo');
 mongoose.connect('mongodb://localhost/angulartodo');
 
-
 // app.use('api', requre('.contollers/api'));
+var Todo = require('../models/todo');
 
 router.get('/', function (req, res) {
-  res.send("HELLO API");
+  Todo.find(function(err, todos){
+   if (err) throw err;
+  res.json( todos);
+ });
 });
 
 //add todo
+router.post('/', function (req, res) {
+  Todo.create({title : req.body.title}, function (err, todo){
+     if (err) throw err;
+      res.json(todo);
+  });
+});
 
 //delete todo
+router.delete('/:id', function (req, res) {
+  Todo.remove(req.params.id, function (err, num_removed, result){
+     if (err) throw err;
+      res.json(result);
+  });
+});
 
 //complete todo
+router.put('/:id/complete', function (req, res) {
+  Todo.update(req.params.id, 
+    { 
+      $set : {
+        completed : true
+    }
+  }, function (err, update_count, result) {
+    if (err) throw err; 
+    res.jason( result );
+  });
+});
 
-//uncomplete todo
-router.get('/', function (req, res) {
 
-})
+//incomplete todo
+router.put('/:id/incomplete', function (req, res) {
+  Todo.update(req.params.id, 
+    { 
+      $set : {
+        completed : false
+    }
+  }, function (err, update_count, result) {
+    if (err) throw err; 
+    res.jason( result );
+  });
+});
 
 module.exports = router;
 // var server = app.listen(3000, function () {
