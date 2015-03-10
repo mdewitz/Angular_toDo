@@ -4,6 +4,7 @@
 var mongoose =  require('mongoose');
 var express = require('express');
 var router = express.Router();
+// var ObjectId = require('mongoose').Types.OjectId;
 
 // mongoose.connect('mongodb://coreos/photo');
 mongoose.connect('mongodb://localhost/angulartodo');
@@ -14,7 +15,7 @@ var Todo = require('../models/todo');
 router.get('/', function (req, res) {
   Todo.find(function(err, todos){
    if (err) throw err;
-  res.json( todos);
+  res.json(todos);
  });
 });
 
@@ -28,7 +29,9 @@ router.post('/', function (req, res) {
 
 //delete todo
 router.delete('/:id', function (req, res) {
-  Todo.remove(req.params.id, function (err, num_removed, result){
+  Todo.find(req.params.id).remove().exec(function (err, num_deleted, result){
+  // Todo.remove(req.params.id, function (err, num_removed, result){
+  // Todo.remove({_id : ObjectId(req.params.id)}, function (err, num_removed, result){
      if (err) throw err;
       res.json(result);
   });
@@ -36,28 +39,27 @@ router.delete('/:id', function (req, res) {
 
 //complete todo
 router.put('/:id/complete', function (req, res) {
-  Todo.update(req.params.id, 
+  Todo.update({_id:req.params.id}, 
     { 
       $set : {
         completed : true
     }
   }, function (err, update_count, result) {
     if (err) throw err; 
-    res.jason( result );
+    res.json( result );
   });
 });
 
-
 //incomplete todo
 router.put('/:id/incomplete', function (req, res) {
-  Todo.update(req.params.id, 
+  Todo.update({_id:req.params.id}, 
     { 
       $set : {
         completed : false
     }
   }, function (err, update_count, result) {
     if (err) throw err; 
-    res.jason( result );
+    res.json( result );
   });
 });
 
